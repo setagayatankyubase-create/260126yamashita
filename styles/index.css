@@ -1,5 +1,5 @@
 /* 
- * 山下工務店 - Global Styles
+ * 鳥山工務店 - Global Styles
  * Design System based on yamashita-sc.com
  */
 
@@ -921,6 +921,632 @@ ul, ol {
 .footer__service-area {
   font-size: 0.6875rem;
   opacity: 0.5;
+}
+
+/* ============================================
+   Sub-page Hero Section
+   ============================================ */
+.page-hero {
+  position: relative;
+  height: 300px;
+  min-height: 200px;
+  background-color: var(--color-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.page-hero__bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.4;
+}
+
+.page-hero__content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  color: var(--color-base);
+}
+
+.page-hero__title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-weight: 500;
+  letter-spacing: var(--letter-spacing-heading);
+  margin-bottom: 10px;
+}
+
+.page-hero__subtitle {
+  font-size: 0.875rem;
+  opacity: 0.8;
+  letter-spacing: 0.1em;
+}
+
+/* ============================================
+   Breadcrumb Navigation
+   ============================================ */
+.breadcrumb {
+  padding: 20px 0;
+  background-color: #FAFAFA;
+  border-bottom: var(--border-thin);
+}
+
+.breadcrumb__list {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 0.75rem;
+  color: var(--color-sub);
+}
+
+.breadcrumb__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.breadcrumb__item::after {
+  content: ">";
+  color: var(--color-sub);
+  opacity: 0.5;
+}
+
+.breadcrumb__item:last-child::after {
+  content: none;
+}
+
+.breadcrumb__link {
+  color: var(--color-sub);
+  transition: color var(--transition-fast);
+}
+
+.breadcrumb__link:hover {
+  color: var(--color-accent);
+  opacity: 1;
+}
+
+/* ============================================
+   Page Content Section
+   ============================================ */
+.page-content {
+  padding: var(--section-padding) 0;
+}
+
+.page-content__header {
+  margin-bottom: 60px;
+  text-align: center;
+}
+
+.page-content__title {
+  font-family: var(--font-serif);
+  font-size: 1.75rem;
+  font-weight: 500;
+  letter-spacing: var(--letter-spacing-heading);
+  margin-bottom: 20px;
+}
+
+.page-content__lead {
+  max-width: 800px;
+  margin: 0 auto;
+  font-size: 0.9375rem;
+  line-height: 2;
+  color: var(--color-sub);
+}
+
+/* Content Block */
+.content-block {
+  margin-bottom: 80px;
+}
+
+.content-block:last-child {
+  margin-bottom: 0;
+}
+
+.content-block__title {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: var(--letter-spacing-heading);
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: var(--border-thin);
+}
+
+.content-block__text {
+  font-size: 0.9375rem;
+  line-height: 2;
+}
+
+.content-block__text p {
+  margin-bottom: 20px;
+}
+
+.content-block__text p:last-child {
+  margin-bottom: 0;
+}
+
+/* ============================================
+   Company Info Table
+   ============================================ */
+.info-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 40px;
+}
+
+.info-table th,
+.info-table td {
+  padding: 20px;
+  text-align: left;
+  border-bottom: var(--border-thin);
+  font-size: 0.9375rem;
+}
+
+.info-table th {
+  width: 200px;
+  background-color: #FAFAFA;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+.info-table td {
+  line-height: 1.8;
+}
+
+/* ============================================
+   Staff Cards
+   ============================================ */
+.staff-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 40px;
+}
+
+.staff-card {
+  background-color: #FAFAFA;
+  padding: 30px;
+  border: var(--border-thin);
+}
+
+.staff-card__image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 20px;
+  display: block;
+  background-color: var(--color-border);
+}
+
+.staff-card__name {
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.staff-card__position {
+  font-size: 0.75rem;
+  color: var(--color-sub);
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.staff-card__qa {
+  margin-top: 20px;
+}
+
+.staff-card__question {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: var(--color-accent);
+}
+
+.staff-card__answer {
+  font-size: 0.8125rem;
+  line-height: 1.8;
+  color: var(--color-sub);
+  margin-bottom: 16px;
+}
+
+/* ============================================
+   Case (Works) Cards Grid
+   ============================================ */
+.case-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.case-card {
+  position: relative;
+  overflow: hidden;
+  background-color: #FAFAFA;
+  border: var(--border-thin);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.case-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.case-card__image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.case-card__content {
+  padding: 20px;
+}
+
+.case-card__title {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  margin-bottom: 10px;
+}
+
+.case-card__description {
+  font-size: 0.8125rem;
+  line-height: 1.8;
+  color: var(--color-sub);
+}
+
+/* ============================================
+   Voice (Customer Review) Cards
+   ============================================ */
+.voice-card {
+  background-color: #FAFAFA;
+  padding: 40px;
+  border: var(--border-thin);
+  margin-bottom: 40px;
+}
+
+.voice-card:last-child {
+  margin-bottom: 0;
+}
+
+.voice-card__header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: var(--border-thin);
+}
+
+.voice-card__avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: var(--color-border);
+}
+
+.voice-card__name {
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+
+.voice-card__qa {
+  margin-bottom: 20px;
+}
+
+.voice-card__question {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+  padding-left: 15px;
+  border-left: 3px solid var(--color-accent);
+}
+
+.voice-card__answer {
+  font-size: 0.9375rem;
+  line-height: 2;
+  padding-left: 15px;
+}
+
+/* ============================================
+   Contact Form
+   ============================================ */
+.contact-form {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.form-group {
+  margin-bottom: 30px;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+  letter-spacing: 0.05em;
+}
+
+.form-label--required::after {
+  content: "必須";
+  font-size: 0.625rem;
+  color: var(--color-base);
+  background-color: #C41E3A;
+  padding: 2px 8px;
+  margin-left: 10px;
+  letter-spacing: 0;
+}
+
+.form-input,
+.form-textarea,
+.form-select {
+  width: 100%;
+  padding: 15px 20px;
+  border: var(--border-thin);
+  background-color: #FAFAFA;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  background-color: var(--color-base);
+}
+
+.form-textarea {
+  min-height: 200px;
+  resize: vertical;
+}
+
+.form-radio-group,
+.form-checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.form-radio,
+.form-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.form-submit {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.form-privacy {
+  margin-top: 40px;
+  padding: 30px;
+  background-color: #FAFAFA;
+  border: var(--border-thin);
+}
+
+.form-privacy__title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 15px;
+}
+
+.form-privacy__text {
+  font-size: 0.8125rem;
+  line-height: 1.8;
+  color: var(--color-sub);
+}
+
+/* ============================================
+   Pagination
+   ============================================ */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 60px;
+}
+
+.pagination__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: var(--border-button);
+  font-size: 0.875rem;
+  transition: all var(--transition-fast);
+}
+
+.pagination__item:hover,
+.pagination__item.active {
+  background-color: var(--color-accent);
+  color: var(--color-base);
+}
+
+/* ============================================
+   Feature Cards (Lineup Detail)
+   ============================================ */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-bottom: 60px;
+}
+
+.feature-card {
+  text-align: center;
+  padding: 40px 30px;
+  background-color: #FAFAFA;
+  border: var(--border-thin);
+}
+
+.feature-card__icon {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 20px;
+}
+
+.feature-card__title {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: var(--letter-spacing-heading);
+  margin-bottom: 15px;
+}
+
+.feature-card__text {
+  font-size: 0.8125rem;
+  line-height: 1.8;
+  color: var(--color-sub);
+}
+
+/* ============================================
+   Blog/News List
+   ============================================ */
+.news-list {
+  border-top: var(--border-thin);
+}
+
+.news-item {
+  display: flex;
+  gap: 30px;
+  padding: 30px 0;
+  border-bottom: var(--border-thin);
+  transition: background-color var(--transition-fast);
+}
+
+.news-item:hover {
+  background-color: #FAFAFA;
+}
+
+.news-item__date {
+  flex-shrink: 0;
+  font-size: 0.8125rem;
+  color: var(--color-sub);
+  width: 100px;
+}
+
+.news-item__category {
+  flex-shrink: 0;
+  font-size: 0.6875rem;
+  padding: 4px 12px;
+  border: 1px solid var(--color-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.news-item__title {
+  flex-grow: 1;
+  font-size: 0.9375rem;
+}
+
+/* ============================================
+   Two Column Layout
+   ============================================ */
+.two-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.two-column--reverse {
+  direction: rtl;
+}
+
+.two-column--reverse > * {
+  direction: ltr;
+}
+
+.two-column__image img {
+  width: 100%;
+  height: auto;
+}
+
+/* Responsive for sub-pages */
+@media (max-width: 1024px) {
+  .case-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .feature-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .two-column {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .info-table th {
+    width: 150px;
+  }
+}
+
+@media (max-width: 640px) {
+  .page-hero {
+    height: 200px;
+  }
+  
+  .case-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .staff-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .info-table th,
+  .info-table td {
+    display: block;
+    width: 100%;
+  }
+  
+  .info-table th {
+    padding-bottom: 10px;
+  }
+  
+  .info-table td {
+    padding-top: 10px;
+  }
+  
+  .news-item {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .voice-card__header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .form-radio-group,
+  .form-checkbox-group {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
 
 /* ============================================
