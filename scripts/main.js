@@ -4,6 +4,8 @@
  */
 
 document.addEventListener('DOMContentLoaded', function() {
+  console.log('[Main] DOM Content Loaded');
+  
   // Initialize all components
   initHeaderScroll();
   initHeroSlider();
@@ -11,6 +13,45 @@ document.addEventListener('DOMContentLoaded', function() {
   initParallax();
   initEventBanner();
   initMobileMenu();
+  
+  // デバッグ: 右側の余白をチェック
+  setTimeout(function() {
+    const bodyWidth = document.body.offsetWidth;
+    const windowWidth = window.innerWidth;
+    const htmlWidth = document.documentElement.offsetWidth;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    
+    console.log('[Debug] Width check:', {
+      bodyWidth: bodyWidth,
+      windowWidth: windowWidth,
+      htmlWidth: htmlWidth,
+      difference: bodyWidth - windowWidth,
+      scrollbarWidth: scrollbarWidth
+    });
+    
+    // 右側の余白がある場合、警告を表示
+    if (bodyWidth > windowWidth) {
+      console.warn('[Debug] Right margin detected!', {
+        bodyWidth: bodyWidth,
+        windowWidth: windowWidth,
+        excess: bodyWidth - windowWidth
+      });
+    }
+    
+    // メニューボタンの状態をチェック
+    const menuToggle = document.querySelector('.header__menu-toggle');
+    const nav = document.querySelector('.header__nav');
+    if (menuToggle && nav) {
+      console.log('[Debug] Menu elements:', {
+        toggleDisplay: window.getComputedStyle(menuToggle).display,
+        toggleVisibility: window.getComputedStyle(menuToggle).visibility,
+        navDisplay: window.getComputedStyle(nav).display,
+        navPosition: window.getComputedStyle(nav).position,
+        navRight: window.getComputedStyle(nav).right,
+        windowWidth: window.innerWidth
+      });
+    }
+  }, 1000);
 });
 
 /**
@@ -213,12 +254,21 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
  * Mobile menu toggle
  */
 function initMobileMenu() {
+  console.log('[Mobile Menu] Initializing...');
+  
   const menuToggle = document.querySelector('.header__menu-toggle');
   const nav = document.querySelector('.header__nav');
   const body = document.body;
 
+  console.log('[Mobile Menu] Elements found:', {
+    menuToggle: !!menuToggle,
+    nav: !!nav,
+    menuToggleElement: menuToggle,
+    navElement: nav
+  });
+
   if (!menuToggle || !nav) {
-    console.warn('Mobile menu elements not found', { menuToggle, nav });
+    console.error('[Mobile Menu] Elements not found!', { menuToggle, nav });
     return;
   }
 
@@ -228,30 +278,50 @@ function initMobileMenu() {
     overlay = document.createElement('div');
     overlay.className = 'mobile-menu-overlay';
     body.appendChild(overlay);
+    console.log('[Mobile Menu] Overlay created');
   }
 
   let isMenuOpen = false;
 
   function openMenu() {
+    console.log('[Mobile Menu] Opening menu...');
     nav.classList.add('active');
     menuToggle.classList.add('active');
     overlay.classList.add('active');
     body.style.overflow = 'hidden';
     body.classList.add('menu-open');
     isMenuOpen = true;
+    
+    // デバッグ: メニューの状態を確認
+    console.log('[Mobile Menu] Menu opened', {
+      navClasses: nav.className,
+      toggleClasses: menuToggle.className,
+      overlayClasses: overlay.className,
+      navStyle: window.getComputedStyle(nav).right
+    });
   }
 
   function closeMenu() {
+    console.log('[Mobile Menu] Closing menu...');
     nav.classList.remove('active');
     menuToggle.classList.remove('active');
     overlay.classList.remove('active');
     body.style.overflow = '';
     body.classList.remove('menu-open');
     isMenuOpen = false;
+    
+    console.log('[Mobile Menu] Menu closed', {
+      navClasses: nav.className,
+      toggleClasses: menuToggle.className
+    });
   }
 
   // Add click event to toggle button
   menuToggle.addEventListener('click', function(e) {
+    console.log('[Mobile Menu] Toggle button clicked', {
+      isMenuOpen: isMenuOpen,
+      event: e
+    });
     e.preventDefault();
     e.stopPropagation();
     
@@ -264,14 +334,17 @@ function initMobileMenu() {
 
   // Close menu when clicking on overlay
   overlay.addEventListener('click', function(e) {
+    console.log('[Mobile Menu] Overlay clicked');
     e.stopPropagation();
     closeMenu();
   });
 
   // Close menu when clicking on a link
   const navLinks = nav.querySelectorAll('.header__nav-link');
-  navLinks.forEach(link => {
+  console.log('[Mobile Menu] Found nav links:', navLinks.length);
+  navLinks.forEach((link, index) => {
     link.addEventListener('click', function(e) {
+      console.log('[Mobile Menu] Nav link clicked:', index);
       closeMenu();
     });
   });
@@ -281,20 +354,12 @@ function initMobileMenu() {
   window.addEventListener('resize', function() {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(function() {
+      console.log('[Mobile Menu] Window resized:', window.innerWidth);
       if (window.innerWidth > 1024 && isMenuOpen) {
         closeMenu();
       }
     }, 250);
   });
 
-  // Close menu when clicking outside (on body)
-  document.addEventListener('click', function(e) {
-    if (isMenuOpen && 
-        !nav.contains(e.target) && 
-        !menuToggle.contains(e.target) && 
-        !overlay.contains(e.target)) {
-      // Only close if clicking outside all menu elements
-      // This is handled by overlay click, so we can skip here
-    }
-  });
+  console.log('[Mobile Menu] Initialization complete');
 }
