@@ -145,6 +145,7 @@ body {
     max-width: 100vw !important;
     box-sizing: border-box !important;
     overflow-x: hidden !important;
+    overflow-y: visible !important;
   }
   
   /* 固定要素の右側余白を削除 */
@@ -570,6 +571,7 @@ ul, ol {
 .section {
   padding: var(--section-padding) 0;
   border-bottom: var(--border-thin);
+  overflow: visible;
 }
 
 .section__header {
@@ -614,7 +616,8 @@ ul, ol {
    ============================================ */
 .concept {
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: visible;
 }
 
 .concept__inner {

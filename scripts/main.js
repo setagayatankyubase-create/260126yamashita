@@ -707,8 +707,17 @@ function initMobileMenu() {
   debugLog('[Mobile Menu] Found nav links:', navLinks.length);
   navLinks.forEach((link, index) => {
     link.addEventListener('click', function(e) {
-      debugLog('[Mobile Menu] Nav link clicked:', index);
-      closeMenu();
+      debugLog('[Mobile Menu] Nav link clicked:', index, link.href);
+      const href = link.getAttribute('href');
+      
+      // リンクの遷移を妨げない
+      // アンカーリンク（#で始まる）の場合はスムーススクロールが動作するように
+      // 通常のリンクの場合はページ遷移が動作するように
+      
+      // メニューを閉じる処理は少し遅延させる（リンク遷移を確実にするため）
+      setTimeout(function() {
+        closeMenu();
+      }, 150);
     });
   });
 
