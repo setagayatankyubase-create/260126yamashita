@@ -1712,7 +1712,24 @@ ul, ol {
 @media (max-width: 640px) {
   :root {
     --section-padding: 60px;
-    --container-padding: 20px;
+    --container-padding: 16px;
+  }
+  
+  /* 文字切れ防止 */
+  body {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+  
+  p, span, a, li, td, th {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
   
   .header {
@@ -1721,16 +1738,20 @@ ul, ol {
   
   .header__logo {
     font-size: 1rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
   
   .header__nav {
     width: 85%;
-    padding: 70px 30px 30px;
+    padding: 70px 24px 30px;
   }
   
   .header__nav-link {
     font-size: 0.9375rem;
     padding: 12px 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
   
   .hero {
@@ -1750,12 +1771,17 @@ ul, ol {
     font-size: 1.125rem;
     writing-mode: horizontal-tb;
     text-orientation: mixed;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.15em;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.6;
   }
   
   .hero__subcopy {
     font-size: 0.75rem;
     margin-top: 10px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
   
   .hero__scroll {
@@ -1778,25 +1804,37 @@ ul, ol {
   
   .section__title-en {
     font-size: 2.5rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
   
   .section__title-jp {
     font-size: 1.5rem;
     margin-top: 10px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
   }
   
   .section__subtitle {
     font-size: 0.6875rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
   
   .concept__heading {
     font-size: 1.25rem;
     margin-bottom: 20px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.6;
   }
   
   .concept__description {
     font-size: 0.875rem;
     line-height: 1.8;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
   
   .works__grid {
@@ -1856,11 +1894,16 @@ ul, ol {
   .message__slogan {
     font-size: 1.25rem;
     margin-bottom: 20px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.6;
   }
   
   .message__text {
     font-size: 0.875rem;
     line-height: 1.8;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
   
   .message__signature {
@@ -1887,10 +1930,15 @@ ul, ol {
   
   .contact__phone-number {
     font-size: 1.5rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
   
   .contact__phone-info {
     font-size: 0.75rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.6;
   }
   
   .contact__divider {
@@ -1921,10 +1969,21 @@ ul, ol {
   .footer__logo {
     font-size: 0.875rem;
     margin-bottom: 20px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.6;
   }
   
   .footer__info {
     font-size: 0.75rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.7;
+  }
+  
+  .footer__info p {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
   
   .footer__sitemap-grid {
@@ -1935,6 +1994,8 @@ ul, ol {
   .footer__sitemap-column h4 {
     font-size: 0.9375rem;
     margin-bottom: 15px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
   
   .footer__sitemap-column ul li {
@@ -1943,6 +2004,8 @@ ul, ol {
   
   .footer__sitemap-column ul li a {
     font-size: 0.8125rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
   
   .footer__zeh-table {
@@ -1968,22 +2031,47 @@ ul, ol {
   .footer__service-area {
     font-size: 0.6875rem;
     line-height: 1.6;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  
+  .footer__zeh-title {
+    font-size: 0.75rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    margin-bottom: 12px;
   }
   
   .event-banner {
-    left: 16px;
-    right: 16px;
-    bottom: 16px;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
     max-width: none;
-    padding: 16px 20px;
+    padding: 14px 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
   }
   
   .event-banner__title {
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
+    margin-bottom: 6px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
   
   .event-banner__info {
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
+    margin-bottom: 10px;
+    line-height: 1.6;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  
+  .event-banner .btn-ghost {
+    width: 100%;
+    text-align: center;
+    padding: 10px 16px;
+    font-size: 0.75rem;
   }
   
   .page-hero {
@@ -1992,27 +2080,44 @@ ul, ol {
   
   .page-hero__title {
     font-size: 1.5rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
   }
   
   .page-hero__subtitle {
     font-size: 0.75rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
   
   .page-content__title {
     font-size: 1.5rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
   }
   
   .page-content__lead {
     font-size: 0.875rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.8;
   }
   
   .content-block__title {
     font-size: 1.25rem;
     margin-bottom: 25px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
   }
   
   .content-block__subtitle {
     font-size: 1.125rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
   }
   
   .two-column {
@@ -2021,6 +2126,14 @@ ul, ol {
   
   .two-column__text {
     font-size: 0.875rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.8;
+  }
+  
+  .two-column__text p {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
   
   .feature-card {
@@ -2030,10 +2143,16 @@ ul, ol {
   .feature-card__title {
     font-size: 1rem;
     margin-bottom: 10px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
   }
   
   .feature-card__text {
     font-size: 0.8125rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.7;
   }
   
   .staff-card {
@@ -2051,6 +2170,12 @@ ul, ol {
   .staff-card__question,
   .staff-card__answer {
     font-size: 0.75rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  
+  .staff-card__answer {
+    line-height: 1.7;
   }
   
   .case-card {
@@ -2075,10 +2200,15 @@ ul, ol {
   
   .voice-card__question {
     font-size: 0.875rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
   
   .voice-card__answer {
     font-size: 0.8125rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.7;
   }
   
   .form-group {
@@ -2127,6 +2257,8 @@ ul, ol {
   .info-table td {
     padding: 12px 15px;
     font-size: 0.875rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
   
   .info-table th {
@@ -2137,6 +2269,7 @@ ul, ol {
   .info-table td {
     padding-top: 8px;
     padding-bottom: 15px;
+    line-height: 1.7;
   }
   
   .news-item {
