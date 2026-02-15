@@ -340,6 +340,11 @@ function initMobileMenu() {
     handleToggleClick(e);
   }, { passive: false });
   
+  // タッチイベントも追加
+  menuToggle.addEventListener('touchstart', function(e) {
+    e.stopPropagation();
+  }, { passive: true });
+  
   // デバッグ: ボタンがクリック可能か確認
   console.log('[Mobile Menu] Toggle button setup:', {
     display: window.getComputedStyle(menuToggle).display,

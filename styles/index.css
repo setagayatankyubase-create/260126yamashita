@@ -305,6 +305,7 @@ ul, ol {
   /* 右側の余白を完全に削除 */
   margin-right: 0 !important;
   padding-right: 40px;
+  overflow-x: hidden;
 }
 
 .header.scrolled {
@@ -320,6 +321,7 @@ ul, ol {
   margin: 0 auto;
   width: 100%;
   box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .header__logo {
@@ -1724,22 +1726,24 @@ ul, ol {
   }
   
   .header {
-    padding: 15px 20px;
-    width: 100%;
-    max-width: 100vw;
-    max-width: calc(100vw - 0px);
-    margin: 0;
+    padding: 15px 20px !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    margin: 0 !important;
     margin-right: 0 !important;
-    padding-right: 20px;
-    box-sizing: border-box;
+    padding-right: 20px !important;
+    padding-left: 20px !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
   }
   
   .header__inner {
-    width: 100%;
-    max-width: 100%;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
   }
   
   .header__nav {
@@ -1779,15 +1783,6 @@ ul, ol {
     border-bottom: var(--border-thin);
     font-size: 1rem;
     display: block;
-  }
-  
-  .header__menu-toggle {
-    display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-    cursor: pointer !important;
-    z-index: 1002 !important;
   }
   
   /* メニューが非表示にならないように */
@@ -2036,7 +2031,9 @@ ul, ol {
     margin: 0 !important;
     margin-right: 0 !important;
     padding-right: 16px !important;
+    padding-left: 16px !important;
     box-sizing: border-box !important;
+    overflow-x: hidden !important;
   }
   
   .header__inner {
