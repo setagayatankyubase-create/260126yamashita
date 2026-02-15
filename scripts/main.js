@@ -217,53 +217,71 @@ function initMobileMenu() {
   const nav = document.querySelector('.header__nav');
   const body = document.body;
 
-  if (menuToggle && nav) {
-    // Create overlay element
-    const overlay = document.createElement('div');
+  if (!menuToggle || !nav) {
+    console.warn('Mobile menu elements not found');
+    return;
+  }
+
+  // Create overlay element if it doesn't exist
+  let overlay = document.querySelector('.mobile-menu-overlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
     overlay.className = 'mobile-menu-overlay';
     body.appendChild(overlay);
+  }
 
-    function openMenu() {
-      nav.classList.add('active');
-      menuToggle.classList.add('active');
-      overlay.classList.add('active');
-      body.style.overflow = 'hidden';
+  function openMenu() {
+    nav.classList.add('active');
+    menuToggle.classList.add('active');
+    overlay.classList.add('active');
+    body.style.overflow = 'hidden';
+  }
+
+  function closeMenu() {
+    nav.classList.remove('active');
+    menuToggle.classList.remove('active');
+    overlay.classList.remove('active');
+    body.style.overflow = '';
+  }
+
+  // Remove existing event listeners by cloning
+  const newMenuToggle = menuToggle.cloneNode(true);
+  menuToggle.parentNode.replaceChild(newMenuToggle, menuToggle);
+
+  // Add click event to the new toggle button
+  newMenuToggle.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const currentNav = document.querySelector('.header__nav');
+    if (currentNav.classList.contains('active')) {
+      closeMenu();
+    } else {
+      openMenu();
     }
+  });
 
-    function closeMenu() {
-      nav.classList.remove('active');
-      menuToggle.classList.remove('active');
-      overlay.classList.remove('active');
-      body.style.overflow = '';
-    }
+  // Close menu when clicking on overlay
+  overlay.addEventListener('click', function(e) {
+    e.stopPropagation();
+    closeMenu();
+  });
 
-    menuToggle.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (nav.classList.contains('active')) {
-        closeMenu();
-      } else {
-        openMenu();
-      }
-    });
-
-    // Close menu when clicking on overlay
-    overlay.addEventListener('click', () => {
+  // Close menu when clicking on a link
+  const navLinks = nav.querySelectorAll('.header__nav-link');
+  navLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
       closeMenu();
     });
+  });
 
-    // Close menu when clicking on a link
-    const navLinks = nav.querySelectorAll('.header__nav-link');
-    navLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        closeMenu();
-      });
-    });
-
-    // Close menu on window resize (if resizing to desktop)
-    window.addEventListener('resize', () => {
+  // Close menu on window resize (if resizing to desktop)
+  let resizeTimer;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function() {
       if (window.innerWidth > 1024) {
         closeMenu();
       }
-    });
-  }
+    }, 250);
+  });
 }

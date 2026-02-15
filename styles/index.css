@@ -257,8 +257,9 @@ ul, ol {
   border: none;
   cursor: pointer;
   padding: 10px;
-  z-index: 1001;
+  z-index: 1002;
   position: relative;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .header__menu-toggle span {
@@ -1609,12 +1610,14 @@ ul, ol {
     padding: 80px 40px 40px;
     box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
     transition: right var(--transition-medium);
-    z-index: 1000;
+    z-index: 1001;
     overflow-y: auto;
+    margin: 0;
   }
   
   .header__nav.active {
     right: 0;
+    margin-right: 0;
   }
   
   .header__nav-link {
@@ -1644,7 +1647,7 @@ ul, ol {
     opacity: 0;
     pointer-events: none;
     transition: opacity var(--transition-medium);
-    z-index: 999;
+    z-index: 1000;
   }
   
   .mobile-menu-overlay.active {
@@ -1744,7 +1747,14 @@ ul, ol {
   
   .header__nav {
     width: 85%;
+    max-width: 100%;
     padding: 70px 24px 30px;
+    margin: 0;
+  }
+  
+  .header__nav.active {
+    right: 0;
+    margin-right: 0;
   }
   
   .header__nav-link {
