@@ -32,6 +32,9 @@ document.addEventListener('DOMContentLoaded', function() {
   debugLog('[Main] DOM Content Loaded');
   debugLog('========================================');
   
+  // 二重スクロール問題の診断
+  checkDoubleScroll();
+  
   // Initialize all components
   initHeaderScroll();
   initHeroSlider();
@@ -611,6 +614,7 @@ function initMobileMenu() {
     
     e.preventDefault();
     e.stopPropagation();
+    e.stopImmediatePropagation();
     
     if (isMenuOpen) {
       debugLog('[Mobile Menu] メニューを閉じます...');
@@ -619,6 +623,8 @@ function initMobileMenu() {
       debugLog('[Mobile Menu] メニューを開きます...');
       openMenu();
     }
+    
+    return false;
   }
   
   // イベントリスナーの追加前に確認
@@ -629,9 +635,13 @@ function initMobileMenu() {
   });
   
   // clickイベントのみに統一（touchstart/touchendは削除して競合を回避）
+  // キャプチャフェーズで処理して、overlayより先に処理されるようにする
   try {
-    menuToggle.addEventListener('click', handleToggleClick, { passive: false });
-    debugLog('[Mobile Menu] clickイベントリスナーを追加しました');
+    menuToggle.addEventListener('click', handleToggleClick, { 
+      passive: false, 
+      capture: true 
+    });
+    debugLog('[Mobile Menu] clickイベントリスナーを追加しました（キャプチャフェーズ）');
   } catch (error) {
     debugError('[Mobile Menu] clickイベントリスナーの追加に失敗:', error);
   }
@@ -669,12 +679,26 @@ function initMobileMenu() {
     debugLog('[Mobile Menu] Overlay clicked', e.target);
     // トグルボタンやメニュー内の要素をクリックした場合は何もしない
     const clickedElement = e.target;
-    if (menuToggle.contains(clickedElement) || menuToggle === clickedElement || 
-        nav.contains(clickedElement) || nav === clickedElement || 
-        clickedElement.closest('.header__nav') || clickedElement.closest('.header__menu-toggle')) {
-      debugLog('[Mobile Menu] Click was on toggle or menu, ignoring overlay click');
+    const isToggle = clickedElement === menuToggle || 
+                     menuToggle.contains(clickedElement) || 
+                     clickedElement.closest('.header__menu-toggle') ||
+                     clickedElement.closest('button.header__menu-toggle');
+    const isNav = clickedElement === nav || 
+                  nav.contains(clickedElement) || 
+                  clickedElement.closest('.header__nav');
+    
+    if (isToggle) {
+      debugLog('[Mobile Menu] Click was on toggle, ignoring overlay click');
+      e.stopPropagation();
+      e.preventDefault();
+      return false;
+    }
+    
+    if (isNav) {
+      debugLog('[Mobile Menu] Click was on menu, ignoring overlay click');
       return;
     }
+    
     // オーバーレイ自体をクリックした場合のみメニューを閉じる
     if (clickedElement === overlay) {
       e.stopPropagation();
@@ -734,4 +758,31 @@ function initMobileMenu() {
     isMobile: window.innerWidth <= 1024
   });
   debugLog('========================================');
+}
+
+/**
+ * 二重スクロール問題の診断
+ * CSSで設定されているが、念のため確認用
+ */
+function checkDoubleScroll() {
+  const html = document.documentElement;
+  const body = document.body;
+  const htmlStyles = window.getComputedStyle(html);
+  const bodyStyles = window.getComputedStyle(body);
+  
+  debugLog('[Scroll Debug] html要素:', {
+    overflowY: htmlStyles.overflowY,
+    hasScrollbar: html.scrollHeight > html.clientHeight
+  });
+  
+  debugLog('[Scroll Debug] body要素:', {
+    overflowY: bodyStyles.overflowY,
+    hasScrollbar: body.scrollHeight > body.clientHeight
+  });
+  
+  // CSSが効いていない場合のみJavaScriptで修正
+  if (htmlStyles.overflowY !== 'visible') {
+    html.style.setProperty('overflow-y', 'visible', 'important');
+    debugWarn('[Scroll Debug] html要素をJavaScriptで修正しました');
+  }
 }
