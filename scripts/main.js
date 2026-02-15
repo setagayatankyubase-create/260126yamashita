@@ -628,43 +628,12 @@ function initMobileMenu() {
     hasAttributeOnclick: menuToggle.hasAttribute('onclick')
   });
   
-  // 複数のイベントタイプで確実に動作させる
+  // clickイベントのみに統一（touchstart/touchendは削除して競合を回避）
   try {
     menuToggle.addEventListener('click', handleToggleClick, { passive: false });
     debugLog('[Mobile Menu] clickイベントリスナーを追加しました');
   } catch (error) {
     debugError('[Mobile Menu] clickイベントリスナーの追加に失敗:', error);
-  }
-  
-  try {
-    menuToggle.addEventListener('touchend', function(e) {
-      debugLog('[Mobile Menu] touchendイベントが発火しました');
-      e.preventDefault();
-      handleToggleClick(e);
-    }, { passive: false });
-    debugLog('[Mobile Menu] touchendイベントリスナーを追加しました');
-  } catch (error) {
-    debugError('[Mobile Menu] touchendイベントリスナーの追加に失敗:', error);
-  }
-  
-  // タッチイベントも追加
-  try {
-    menuToggle.addEventListener('touchstart', function(e) {
-      debugLog('[Mobile Menu] touchstartイベントが発火しました');
-      e.stopPropagation();
-    }, { passive: true });
-    debugLog('[Mobile Menu] touchstartイベントリスナーを追加しました');
-  } catch (error) {
-    debugError('[Mobile Menu] touchstartイベントリスナーの追加に失敗:', error);
-  }
-  
-  // マウスイベントも追加（デスクトップでのテスト用）
-  try {
-    menuToggle.addEventListener('mousedown', function(e) {
-      debugLog('[Mobile Menu] mousedownイベントが発火しました');
-    }, { passive: true });
-  } catch (error) {
-    debugError('[Mobile Menu] mousedownイベントリスナーの追加に失敗:', error);
   }
   
   // デバッグ: ボタンがクリック可能か確認
@@ -697,9 +666,20 @@ function initMobileMenu() {
 
   // Close menu when clicking on overlay
   overlay.addEventListener('click', function(e) {
-    debugLog('[Mobile Menu] Overlay clicked');
-    e.stopPropagation();
-    closeMenu();
+    debugLog('[Mobile Menu] Overlay clicked', e.target);
+    // トグルボタンやメニュー内の要素をクリックした場合は何もしない
+    const clickedElement = e.target;
+    if (menuToggle.contains(clickedElement) || menuToggle === clickedElement || 
+        nav.contains(clickedElement) || nav === clickedElement || 
+        clickedElement.closest('.header__nav') || clickedElement.closest('.header__menu-toggle')) {
+      debugLog('[Mobile Menu] Click was on toggle or menu, ignoring overlay click');
+      return;
+    }
+    // オーバーレイ自体をクリックした場合のみメニューを閉じる
+    if (clickedElement === overlay) {
+      e.stopPropagation();
+      closeMenu();
+    }
   });
 
   // Close menu when clicking on a link
@@ -715,8 +695,7 @@ function initMobileMenu() {
       e.stopPropagation();
       
       // リンクの遷移を確実にするため、デフォルトの動作を妨げない
-      // アンカーリンク（#で始まる）の場合はスムーススクロールが動作
-      // 通常のリンクの場合はページ遷移が動作
+      // preventDefault()は呼ばない
       
       if (href && href.startsWith('#')) {
         // アンカーリンクの場合はスムーススクロール後にメニューを閉じる
@@ -724,7 +703,7 @@ function initMobileMenu() {
           closeMenu();
         }, 300);
       } else if (href && href !== '#' && href !== '') {
-        // 通常のリンクの場合は即座にメニューを閉じる（ページ遷移前に）
+        // 通常のリンクの場合は即座にメニューを閉じる
         // リンク遷移はデフォルトの動作で実行される
         closeMenu();
       }
