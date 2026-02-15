@@ -4,7 +4,9 @@
  */
 
 document.addEventListener('DOMContentLoaded', function() {
+  console.log('========================================');
   console.log('[Main] DOM Content Loaded');
+  console.log('========================================');
   
   // Initialize all components
   initHeaderScroll();
@@ -14,44 +16,198 @@ document.addEventListener('DOMContentLoaded', function() {
   initEventBanner();
   initMobileMenu();
   
-  // デバッグ: 右側の余白をチェック
+  // 詳細なデバッグ: 右側の余白をチェック
   setTimeout(function() {
+    console.log('========================================');
+    console.log('[Debug] 詳細な幅チェック開始');
+    console.log('========================================');
+    
     const bodyWidth = document.body.offsetWidth;
+    const bodyClientWidth = document.body.clientWidth;
+    const bodyScrollWidth = document.body.scrollWidth;
     const windowWidth = window.innerWidth;
     const htmlWidth = document.documentElement.offsetWidth;
+    const htmlClientWidth = document.documentElement.clientWidth;
+    const htmlScrollWidth = document.documentElement.scrollWidth;
     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
     
-    console.log('[Debug] Width check:', {
-      bodyWidth: bodyWidth,
-      windowWidth: windowWidth,
-      htmlWidth: htmlWidth,
-      difference: bodyWidth - windowWidth,
-      scrollbarWidth: scrollbarWidth
+    console.log('[Debug] 基本サイズ情報:', {
+      bodyOffsetWidth: bodyWidth,
+      bodyClientWidth: bodyClientWidth,
+      bodyScrollWidth: bodyScrollWidth,
+      windowInnerWidth: windowWidth,
+      htmlOffsetWidth: htmlWidth,
+      htmlClientWidth: htmlClientWidth,
+      htmlScrollWidth: htmlScrollWidth,
+      scrollbarWidth: scrollbarWidth,
+      bodyExcess: bodyWidth - windowWidth,
+      htmlExcess: htmlWidth - windowWidth
     });
     
+    // ヘッダーの詳細チェック
+    const header = document.querySelector('.header');
+    const headerInner = document.querySelector('.header__inner');
+    if (header) {
+      const headerStyles = window.getComputedStyle(header);
+      console.log('[Debug] ヘッダー詳細:', {
+        offsetWidth: header.offsetWidth,
+        clientWidth: header.clientWidth,
+        scrollWidth: header.scrollWidth,
+        offsetLeft: header.offsetLeft,
+        offsetRight: windowWidth - (header.offsetLeft + header.offsetWidth),
+        paddingLeft: headerStyles.paddingLeft,
+        paddingRight: headerStyles.paddingRight,
+        marginLeft: headerStyles.marginLeft,
+        marginRight: headerStyles.marginRight,
+        width: headerStyles.width,
+        maxWidth: headerStyles.maxWidth,
+        boxSizing: headerStyles.boxSizing,
+        overflowX: headerStyles.overflowX,
+        position: headerStyles.position,
+        left: headerStyles.left,
+        right: headerStyles.right
+      });
+    }
+    
+    if (headerInner) {
+      const innerStyles = window.getComputedStyle(headerInner);
+      console.log('[Debug] ヘッダー内部詳細:', {
+        offsetWidth: headerInner.offsetWidth,
+        clientWidth: headerInner.clientWidth,
+        scrollWidth: headerInner.scrollWidth,
+        paddingLeft: innerStyles.paddingLeft,
+        paddingRight: innerStyles.paddingRight,
+        marginLeft: innerStyles.marginLeft,
+        marginRight: innerStyles.marginRight,
+        width: innerStyles.width,
+        maxWidth: innerStyles.maxWidth,
+        boxSizing: innerStyles.boxSizing
+      });
+    }
+    
     // 右側の余白がある場合、警告を表示
-    if (bodyWidth > windowWidth) {
-      console.warn('[Debug] Right margin detected!', {
+    if (bodyWidth > windowWidth || htmlWidth > windowWidth) {
+      console.error('========================================');
+      console.error('[Debug] 右側の余白が検出されました！');
+      console.error('========================================');
+      console.error('詳細:', {
         bodyWidth: bodyWidth,
         windowWidth: windowWidth,
-        excess: bodyWidth - windowWidth
+        bodyExcess: bodyWidth - windowWidth,
+        htmlWidth: htmlWidth,
+        htmlExcess: htmlWidth - windowWidth
       });
+      
+      // 問題のある要素を探す
+      const allElements = document.querySelectorAll('*');
+      const problematicElements = [];
+      allElements.forEach(function(el) {
+        const styles = window.getComputedStyle(el);
+        const elWidth = el.offsetWidth;
+        const elRight = el.offsetLeft + elWidth;
+        if (elRight > windowWidth + 10) { // 10pxの許容範囲
+          problematicElements.push({
+            element: el.tagName + (el.className ? '.' + el.className : '') + (el.id ? '#' + el.id : ''),
+            width: elWidth,
+            right: elRight,
+            excess: elRight - windowWidth,
+            paddingLeft: styles.paddingLeft,
+            paddingRight: styles.paddingRight,
+            marginLeft: styles.marginLeft,
+            marginRight: styles.marginRight,
+            maxWidth: styles.maxWidth,
+            boxSizing: styles.boxSizing
+          });
+        }
+      });
+      
+      if (problematicElements.length > 0) {
+        console.error('[Debug] 問題のある要素:', problematicElements.slice(0, 10)); // 最初の10個だけ表示
+      }
     }
     
     // メニューボタンの状態をチェック
     const menuToggle = document.querySelector('.header__menu-toggle');
     const nav = document.querySelector('.header__nav');
-    if (menuToggle && nav) {
-      console.log('[Debug] Menu elements:', {
-        toggleDisplay: window.getComputedStyle(menuToggle).display,
-        toggleVisibility: window.getComputedStyle(menuToggle).visibility,
-        navDisplay: window.getComputedStyle(nav).display,
-        navPosition: window.getComputedStyle(nav).position,
-        navRight: window.getComputedStyle(nav).right,
-        windowWidth: window.innerWidth
+    if (menuToggle) {
+      const toggleStyles = window.getComputedStyle(menuToggle);
+      console.log('[Debug] メニュートグル詳細:', {
+        exists: !!menuToggle,
+        offsetWidth: menuToggle.offsetWidth,
+        offsetHeight: menuToggle.offsetHeight,
+        display: toggleStyles.display,
+        visibility: toggleStyles.visibility,
+        opacity: toggleStyles.opacity,
+        pointerEvents: toggleStyles.pointerEvents,
+        zIndex: toggleStyles.zIndex,
+        position: toggleStyles.position,
+        cursor: toggleStyles.cursor,
+        hasClickListener: menuToggle.onclick !== null || menuToggle.getAttribute('onclick') !== null
       });
+      
+      // イベントリスナーの確認
+      console.log('[Debug] メニュートグルイベント:', {
+        hasEventListeners: menuToggle.addEventListener ? 'Yes' : 'No',
+        classList: Array.from(menuToggle.classList),
+        innerHTML: menuToggle.innerHTML.substring(0, 50)
+      });
+    } else {
+      console.error('[Debug] メニュートグルが見つかりません！');
     }
+    
+    if (nav) {
+      const navStyles = window.getComputedStyle(nav);
+      console.log('[Debug] ナビゲーション詳細:', {
+        exists: !!nav,
+        offsetWidth: nav.offsetWidth,
+        offsetHeight: nav.offsetHeight,
+        display: navStyles.display,
+        position: navStyles.position,
+        right: navStyles.right,
+        width: navStyles.width,
+        maxWidth: navStyles.maxWidth,
+        zIndex: navStyles.zIndex,
+        hasActiveClass: nav.classList.contains('active'),
+        classList: Array.from(nav.classList)
+      });
+    } else {
+      console.error('[Debug] ナビゲーションが見つかりません！');
+    }
+    
+    // オーバーレイの確認
+    const overlay = document.querySelector('.mobile-menu-overlay');
+    if (overlay) {
+      const overlayStyles = window.getComputedStyle(overlay);
+      console.log('[Debug] オーバーレイ詳細:', {
+        exists: !!overlay,
+        display: overlayStyles.display,
+        opacity: overlayStyles.opacity,
+        pointerEvents: overlayStyles.pointerEvents,
+        zIndex: overlayStyles.zIndex,
+        hasActiveClass: overlay.classList.contains('active'),
+        classList: Array.from(overlay.classList)
+      });
+    } else {
+      console.warn('[Debug] オーバーレイが見つかりません！');
+    }
+    
+    console.log('========================================');
+    console.log('[Debug] 詳細な幅チェック終了');
+    console.log('========================================');
   }, 1000);
+  
+  // リサイズ時にもチェック
+  let resizeCheckTimer;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeCheckTimer);
+    resizeCheckTimer = setTimeout(function() {
+      console.log('[Debug] リサイズ後のチェック:', {
+        windowWidth: window.innerWidth,
+        bodyWidth: document.body.offsetWidth,
+        htmlWidth: document.documentElement.offsetWidth
+      });
+    }, 500);
+  });
 });
 
 /**
@@ -254,23 +410,79 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
  * Mobile menu toggle
  */
 function initMobileMenu() {
-  console.log('[Mobile Menu] Initializing...');
+  console.log('========================================');
+  console.log('[Mobile Menu] 初期化開始');
+  console.log('========================================');
   
   const menuToggle = document.querySelector('.header__menu-toggle');
   const nav = document.querySelector('.header__nav');
   const body = document.body;
 
-  console.log('[Mobile Menu] Elements found:', {
-    menuToggle: !!menuToggle,
-    nav: !!nav,
+  console.log('[Mobile Menu] 要素の検索結果:', {
+    menuToggleFound: !!menuToggle,
+    navFound: !!nav,
     menuToggleElement: menuToggle,
-    navElement: nav
+    navElement: nav,
+    bodyElement: body
   });
 
-  if (!menuToggle || !nav) {
-    console.error('[Mobile Menu] Elements not found!', { menuToggle, nav });
+  if (!menuToggle) {
+    console.error('========================================');
+    console.error('[Mobile Menu] エラー: メニュートグルが見つかりません！');
+    console.error('========================================');
+    console.error('検索したセレクター: .header__menu-toggle');
+    console.error('HTML内の存在確認:', {
+      allButtons: document.querySelectorAll('button').length,
+      allMenuToggles: document.querySelectorAll('[class*="menu"]').length,
+      headerButtons: document.querySelectorAll('header button').length
+    });
     return;
   }
+  
+  if (!nav) {
+    console.error('========================================');
+    console.error('[Mobile Menu] エラー: ナビゲーションが見つかりません！');
+    console.error('========================================');
+    console.error('検索したセレクター: .header__nav');
+    return;
+  }
+  
+  // 要素の詳細情報を出力
+  const toggleStyles = window.getComputedStyle(menuToggle);
+  const navStyles = window.getComputedStyle(nav);
+  
+  console.log('[Mobile Menu] メニュートグルの詳細:', {
+    tagName: menuToggle.tagName,
+    className: menuToggle.className,
+    id: menuToggle.id,
+    offsetWidth: menuToggle.offsetWidth,
+    offsetHeight: menuToggle.offsetHeight,
+    display: toggleStyles.display,
+    visibility: toggleStyles.visibility,
+    opacity: toggleStyles.opacity,
+    pointerEvents: toggleStyles.pointerEvents,
+    zIndex: toggleStyles.zIndex,
+    position: toggleStyles.position,
+    cursor: toggleStyles.cursor,
+    padding: toggleStyles.padding,
+    margin: toggleStyles.margin
+  });
+  
+  console.log('[Mobile Menu] ナビゲーションの詳細:', {
+    tagName: nav.tagName,
+    className: nav.className,
+    id: nav.id,
+    offsetWidth: nav.offsetWidth,
+    offsetHeight: nav.offsetHeight,
+    display: navStyles.display,
+    position: navStyles.position,
+    right: navStyles.right,
+    width: navStyles.width,
+    maxWidth: navStyles.maxWidth,
+    zIndex: navStyles.zIndex,
+    visibility: navStyles.visibility,
+    opacity: navStyles.opacity
+  });
 
   // Create overlay element if it doesn't exist
   let overlay = document.querySelector('.mobile-menu-overlay');
@@ -284,7 +496,10 @@ function initMobileMenu() {
   let isMenuOpen = false;
 
   function openMenu() {
-    console.log('[Mobile Menu] Opening menu...');
+    console.log('========================================');
+    console.log('[Mobile Menu] メニューを開いています...');
+    console.log('========================================');
+    
     nav.classList.add('active');
     menuToggle.classList.add('active');
     overlay.classList.add('active');
@@ -293,16 +508,45 @@ function initMobileMenu() {
     isMenuOpen = true;
     
     // デバッグ: メニューの状態を確認
-    console.log('[Mobile Menu] Menu opened', {
+    const navFinalStyles = window.getComputedStyle(nav);
+    const toggleFinalStyles = window.getComputedStyle(menuToggle);
+    const overlayFinalStyles = window.getComputedStyle(overlay);
+    
+    console.log('[Mobile Menu] メニューが開きました:', {
       navClasses: nav.className,
+      navHasActive: nav.classList.contains('active'),
+      navRight: navFinalStyles.right,
+      navDisplay: navFinalStyles.display,
+      navVisibility: navFinalStyles.visibility,
+      navOpacity: navFinalStyles.opacity,
+      navZIndex: navFinalStyles.zIndex,
       toggleClasses: menuToggle.className,
+      toggleHasActive: menuToggle.classList.contains('active'),
+      toggleDisplay: toggleFinalStyles.display,
       overlayClasses: overlay.className,
-      navStyle: window.getComputedStyle(nav).right
+      overlayHasActive: overlay.classList.contains('active'),
+      overlayOpacity: overlayFinalStyles.opacity,
+      overlayPointerEvents: overlayFinalStyles.pointerEvents,
+      bodyOverflow: body.style.overflow,
+      bodyHasMenuOpen: body.classList.contains('menu-open'),
+      isMenuOpen: isMenuOpen
     });
+    
+    // アニメーション後の状態も確認
+    setTimeout(function() {
+      const navAfterStyles = window.getComputedStyle(nav);
+      console.log('[Mobile Menu] アニメーション後の状態:', {
+        navRight: navAfterStyles.right,
+        navTransform: navAfterStyles.transform
+      });
+    }, 600);
   }
 
   function closeMenu() {
-    console.log('[Mobile Menu] Closing menu...');
+    console.log('========================================');
+    console.log('[Mobile Menu] メニューを閉じています...');
+    console.log('========================================');
+    
     nav.classList.remove('active');
     menuToggle.classList.remove('active');
     overlay.classList.remove('active');
@@ -310,48 +554,122 @@ function initMobileMenu() {
     body.classList.remove('menu-open');
     isMenuOpen = false;
     
-    console.log('[Mobile Menu] Menu closed', {
+    const navFinalStyles = window.getComputedStyle(nav);
+    const toggleFinalStyles = window.getComputedStyle(menuToggle);
+    
+    console.log('[Mobile Menu] メニューが閉じました:', {
       navClasses: nav.className,
-      toggleClasses: menuToggle.className
+      navHasActive: nav.classList.contains('active'),
+      navRight: navFinalStyles.right,
+      toggleClasses: menuToggle.className,
+      toggleHasActive: menuToggle.classList.contains('active'),
+      bodyOverflow: body.style.overflow,
+      bodyHasMenuOpen: body.classList.contains('menu-open'),
+      isMenuOpen: isMenuOpen
     });
   }
 
   // Add click event to toggle button - 複数の方法で確実に動作させる
   function handleToggleClick(e) {
-    console.log('[Mobile Menu] Toggle button clicked', {
+    console.log('========================================');
+    console.log('[Mobile Menu] トグルボタンがクリックされました！');
+    console.log('========================================');
+    console.log('詳細:', {
       isMenuOpen: isMenuOpen,
-      event: e,
-      target: e.target
+      eventType: e.type,
+      target: e.target,
+      currentTarget: e.currentTarget,
+      button: e.button,
+      clientX: e.clientX,
+      clientY: e.clientY,
+      timestamp: new Date().toISOString()
     });
+    
     e.preventDefault();
     e.stopPropagation();
     
     if (isMenuOpen) {
+      console.log('[Mobile Menu] メニューを閉じます...');
       closeMenu();
     } else {
+      console.log('[Mobile Menu] メニューを開きます...');
       openMenu();
     }
   }
   
+  // イベントリスナーの追加前に確認
+  console.log('[Mobile Menu] イベントリスナーの追加前の状態:', {
+    hasOnClick: typeof menuToggle.onclick === 'function',
+    onclickValue: menuToggle.onclick,
+    hasAttributeOnclick: menuToggle.hasAttribute('onclick')
+  });
+  
   // 複数のイベントタイプで確実に動作させる
-  menuToggle.addEventListener('click', handleToggleClick, { passive: false });
-  menuToggle.addEventListener('touchend', function(e) {
-    e.preventDefault();
-    handleToggleClick(e);
-  }, { passive: false });
+  try {
+    menuToggle.addEventListener('click', handleToggleClick, { passive: false });
+    console.log('[Mobile Menu] clickイベントリスナーを追加しました');
+  } catch (error) {
+    console.error('[Mobile Menu] clickイベントリスナーの追加に失敗:', error);
+  }
+  
+  try {
+    menuToggle.addEventListener('touchend', function(e) {
+      console.log('[Mobile Menu] touchendイベントが発火しました');
+      e.preventDefault();
+      handleToggleClick(e);
+    }, { passive: false });
+    console.log('[Mobile Menu] touchendイベントリスナーを追加しました');
+  } catch (error) {
+    console.error('[Mobile Menu] touchendイベントリスナーの追加に失敗:', error);
+  }
   
   // タッチイベントも追加
-  menuToggle.addEventListener('touchstart', function(e) {
-    e.stopPropagation();
-  }, { passive: true });
+  try {
+    menuToggle.addEventListener('touchstart', function(e) {
+      console.log('[Mobile Menu] touchstartイベントが発火しました');
+      e.stopPropagation();
+    }, { passive: true });
+    console.log('[Mobile Menu] touchstartイベントリスナーを追加しました');
+  } catch (error) {
+    console.error('[Mobile Menu] touchstartイベントリスナーの追加に失敗:', error);
+  }
+  
+  // マウスイベントも追加（デスクトップでのテスト用）
+  try {
+    menuToggle.addEventListener('mousedown', function(e) {
+      console.log('[Mobile Menu] mousedownイベントが発火しました');
+    }, { passive: true });
+  } catch (error) {
+    console.error('[Mobile Menu] mousedownイベントリスナーの追加に失敗:', error);
+  }
   
   // デバッグ: ボタンがクリック可能か確認
-  console.log('[Mobile Menu] Toggle button setup:', {
-    display: window.getComputedStyle(menuToggle).display,
-    visibility: window.getComputedStyle(menuToggle).visibility,
-    pointerEvents: window.getComputedStyle(menuToggle).pointerEvents,
-    zIndex: window.getComputedStyle(menuToggle).zIndex
+  const finalToggleStyles = window.getComputedStyle(menuToggle);
+  console.log('[Mobile Menu] イベントリスナー追加後の状態:', {
+    display: finalToggleStyles.display,
+    visibility: finalToggleStyles.visibility,
+    pointerEvents: finalToggleStyles.pointerEvents,
+    zIndex: finalToggleStyles.zIndex,
+    cursor: finalToggleStyles.cursor,
+    position: finalToggleStyles.position
   });
+  
+  // 手動でクリックイベントをテスト
+  console.log('[Mobile Menu] テスト: 手動でクリックイベントを発火します...');
+  setTimeout(function() {
+    try {
+      const testEvent = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+        view: window
+      });
+      console.log('[Mobile Menu] テストイベントを作成しました:', testEvent);
+      // 実際には発火させない（デバッグ用のログのみ）
+      console.log('[Mobile Menu] 注意: 実際のテストイベントは発火していません（デバッグ用）');
+    } catch (error) {
+      console.error('[Mobile Menu] テストイベントの作成に失敗:', error);
+    }
+  }, 2000);
 
   // Close menu when clicking on overlay
   overlay.addEventListener('click', function(e) {
@@ -382,5 +700,16 @@ function initMobileMenu() {
     }, 250);
   });
 
-  console.log('[Mobile Menu] Initialization complete');
+  console.log('========================================');
+  console.log('[Mobile Menu] 初期化完了');
+  console.log('========================================');
+  console.log('最終状態:', {
+    menuToggleExists: !!menuToggle,
+    navExists: !!nav,
+    overlayExists: !!overlay,
+    isMenuOpen: isMenuOpen,
+    windowWidth: window.innerWidth,
+    isMobile: window.innerWidth <= 1024
+  });
+  console.log('========================================');
 }
