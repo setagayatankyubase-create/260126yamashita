@@ -53,6 +53,45 @@
 html {
   font-size: 16px;
   scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+  position: relative;
+}
+
+@media (max-width: 1024px) {
+  html {
+    margin-right: 0;
+    padding-right: 0;
+    overflow-x: hidden;
+  }
+  
+  body {
+    margin-right: 0;
+    padding-right: 0;
+    overflow-x: hidden;
+    position: relative;
+  }
+  
+  body.menu-open {
+    overflow: hidden;
+    margin-right: 0;
+    padding-right: 0;
+    position: fixed;
+    width: 100%;
+  }
+  
+  /* スクロールバーを考慮した余白削除 */
+  .header__nav.active {
+    right: 0 !important;
+    margin-right: 0 !important;
+    padding-right: 40px;
+  }
 }
 
 body {
@@ -1607,20 +1646,22 @@ ul, ol {
     background-color: var(--color-base);
     display: flex;
     flex-direction: column;
-    padding: 80px 40px 40px;
-    padding-right: 40px;
-    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    padding: 80px 40px 40px 40px;
+    box-shadow: -4px 0 15px rgba(0, 0, 0, 0.15);
     transition: right var(--transition-medium);
     z-index: 1001;
     overflow-y: auto;
     margin: 0;
     margin-right: 0;
+    padding-right: 0;
+    box-sizing: border-box;
   }
   
   .header__nav.active {
     right: 0 !important;
     margin-right: 0 !important;
     padding-right: 40px;
+    transform: translateX(0);
   }
   
   .header__nav-link {
@@ -1751,16 +1792,18 @@ ul, ol {
   .header__nav {
     width: 85%;
     max-width: 100%;
-    padding: 70px 24px 30px;
-    padding-right: 24px;
+    padding: 70px 24px 30px 24px;
     margin: 0;
     margin-right: 0;
+    padding-right: 0;
+    box-sizing: border-box;
   }
   
   .header__nav.active {
     right: 0 !important;
     margin-right: 0 !important;
     padding-right: 24px;
+    transform: translateX(0);
   }
   
   .header__nav-link {

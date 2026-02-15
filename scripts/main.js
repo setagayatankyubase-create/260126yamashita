@@ -218,7 +218,7 @@ function initMobileMenu() {
   const body = document.body;
 
   if (!menuToggle || !nav) {
-    console.warn('Mobile menu elements not found');
+    console.warn('Mobile menu elements not found', { menuToggle, nav });
     return;
   }
 
@@ -230,11 +230,15 @@ function initMobileMenu() {
     body.appendChild(overlay);
   }
 
+  let isMenuOpen = false;
+
   function openMenu() {
     nav.classList.add('active');
     menuToggle.classList.add('active');
     overlay.classList.add('active');
     body.style.overflow = 'hidden';
+    body.classList.add('menu-open');
+    isMenuOpen = true;
   }
 
   function closeMenu() {
@@ -242,18 +246,16 @@ function initMobileMenu() {
     menuToggle.classList.remove('active');
     overlay.classList.remove('active');
     body.style.overflow = '';
+    body.classList.remove('menu-open');
+    isMenuOpen = false;
   }
 
-  // Remove existing event listeners by cloning
-  const newMenuToggle = menuToggle.cloneNode(true);
-  menuToggle.parentNode.replaceChild(newMenuToggle, menuToggle);
-
-  // Add click event to the new toggle button
-  newMenuToggle.addEventListener('click', function(e) {
+  // Add click event to toggle button
+  menuToggle.addEventListener('click', function(e) {
     e.preventDefault();
     e.stopPropagation();
-    const currentNav = document.querySelector('.header__nav');
-    if (currentNav.classList.contains('active')) {
+    
+    if (isMenuOpen) {
       closeMenu();
     } else {
       openMenu();
@@ -279,9 +281,20 @@ function initMobileMenu() {
   window.addEventListener('resize', function() {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(function() {
-      if (window.innerWidth > 1024) {
+      if (window.innerWidth > 1024 && isMenuOpen) {
         closeMenu();
       }
     }, 250);
+  });
+
+  // Close menu when clicking outside (on body)
+  document.addEventListener('click', function(e) {
+    if (isMenuOpen && 
+        !nav.contains(e.target) && 
+        !menuToggle.contains(e.target) && 
+        !overlay.contains(e.target)) {
+      // Only close if clicking outside all menu elements
+      // This is handled by overlay click, so we can skip here
+    }
   });
 }
