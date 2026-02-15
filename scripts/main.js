@@ -703,22 +703,32 @@ function initMobileMenu() {
   });
 
   // Close menu when clicking on a link
-  const navLinks = nav.querySelectorAll('.header__nav-link');
+  // モバイルメニュー内のすべてのリンクを取得
+  const navLinks = nav.querySelectorAll('a[href]');
   debugLog('[Mobile Menu] Found nav links:', navLinks.length);
   navLinks.forEach((link, index) => {
     link.addEventListener('click', function(e) {
       debugLog('[Mobile Menu] Nav link clicked:', index, link.href);
       const href = link.getAttribute('href');
       
-      // リンクの遷移を妨げない
-      // アンカーリンク（#で始まる）の場合はスムーススクロールが動作するように
-      // 通常のリンクの場合はページ遷移が動作するように
+      // オーバーレイのイベントが干渉しないように、イベントの伝播を止める
+      e.stopPropagation();
       
-      // メニューを閉じる処理は少し遅延させる（リンク遷移を確実にするため）
-      setTimeout(function() {
+      // リンクの遷移を確実にするため、デフォルトの動作を妨げない
+      // アンカーリンク（#で始まる）の場合はスムーススクロールが動作
+      // 通常のリンクの場合はページ遷移が動作
+      
+      if (href && href.startsWith('#')) {
+        // アンカーリンクの場合はスムーススクロール後にメニューを閉じる
+        setTimeout(function() {
+          closeMenu();
+        }, 300);
+      } else if (href && href !== '#' && href !== '') {
+        // 通常のリンクの場合は即座にメニューを閉じる（ページ遷移前に）
+        // リンク遷移はデフォルトの動作で実行される
         closeMenu();
-      }, 150);
-    });
+      }
+    }, true); // キャプチャフェーズでイベントを捕捉（オーバーレイより先に処理）
   });
 
   // Close menu on window resize (if resizing to desktop)
