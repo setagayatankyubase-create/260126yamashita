@@ -201,23 +201,6 @@ document.addEventListener('DOMContentLoaded', function() {
       debugError('[Debug] ナビゲーションが見つかりません！');
     }
     
-    // オーバーレイの確認
-    const overlay = document.querySelector('.mobile-menu-overlay');
-    if (overlay) {
-      const overlayStyles = window.getComputedStyle(overlay);
-      debugLog('[Debug] オーバーレイ詳細:', {
-        exists: !!overlay,
-        display: overlayStyles.display,
-        opacity: overlayStyles.opacity,
-        pointerEvents: overlayStyles.pointerEvents,
-        zIndex: overlayStyles.zIndex,
-        hasActiveClass: overlay.classList.contains('active'),
-        classList: Array.from(overlay.classList)
-      });
-    } else {
-      debugWarn('[Debug] オーバーレイが見つかりません！');
-    }
-    
     debugLog('========================================');
     debugLog('[Debug] 詳細な幅チェック終了');
     debugLog('========================================');
@@ -511,15 +494,6 @@ function initMobileMenu() {
     opacity: navStyles.opacity
   });
 
-  // Create overlay element if it doesn't exist
-  let overlay = document.querySelector('.mobile-menu-overlay');
-  if (!overlay) {
-    overlay = document.createElement('div');
-    overlay.className = 'mobile-menu-overlay';
-    body.appendChild(overlay);
-    debugLog('[Mobile Menu] Overlay created');
-  }
-
   let isMenuOpen = false;
 
   function openMenu() {
@@ -529,7 +503,6 @@ function initMobileMenu() {
     
     nav.classList.add('active');
     menuToggle.classList.add('active');
-    overlay.classList.add('active');
     body.style.overflow = 'hidden';
     body.classList.add('menu-open');
     isMenuOpen = true;
@@ -537,7 +510,6 @@ function initMobileMenu() {
     // デバッグ: メニューの状態を確認
     const navFinalStyles = window.getComputedStyle(nav);
     const toggleFinalStyles = window.getComputedStyle(menuToggle);
-    const overlayFinalStyles = window.getComputedStyle(overlay);
     
     debugLog('[Mobile Menu] メニューが開きました:', {
       navClasses: nav.className,
@@ -550,10 +522,6 @@ function initMobileMenu() {
       toggleClasses: menuToggle.className,
       toggleHasActive: menuToggle.classList.contains('active'),
       toggleDisplay: toggleFinalStyles.display,
-      overlayClasses: overlay.className,
-      overlayHasActive: overlay.classList.contains('active'),
-      overlayOpacity: overlayFinalStyles.opacity,
-      overlayPointerEvents: overlayFinalStyles.pointerEvents,
       bodyOverflow: body.style.overflow,
       bodyHasMenuOpen: body.classList.contains('menu-open'),
       isMenuOpen: isMenuOpen
@@ -576,7 +544,6 @@ function initMobileMenu() {
     
     nav.classList.remove('active');
     menuToggle.classList.remove('active');
-    overlay.classList.remove('active');
     body.style.overflow = '';
     body.classList.remove('menu-open');
     isMenuOpen = false;
@@ -596,31 +563,18 @@ function initMobileMenu() {
     });
   }
 
-  // Add click event to toggle button - 複数の方法で確実に動作させる
+  // Add click event to toggle button
   function handleToggleClick(e) {
-    debugLog('========================================');
     debugLog('[Mobile Menu] トグルボタンがクリックされました！');
-    debugLog('========================================');
-    debugLog('詳細:', {
-      isMenuOpen: isMenuOpen,
-      eventType: e.type,
-      target: e.target,
-      currentTarget: e.currentTarget,
-      button: e.button,
-      clientX: e.clientX,
-      clientY: e.clientY,
-      timestamp: new Date().toISOString()
-    });
     
+    // イベントの伝播を確実に停止
     e.preventDefault();
     e.stopPropagation();
     e.stopImmediatePropagation();
     
     if (isMenuOpen) {
-      debugLog('[Mobile Menu] メニューを閉じます...');
       closeMenu();
     } else {
-      debugLog('[Mobile Menu] メニューを開きます...');
       openMenu();
     }
     
@@ -634,14 +588,20 @@ function initMobileMenu() {
     hasAttributeOnclick: menuToggle.hasAttribute('onclick')
   });
   
-  // clickイベントのみに統一（touchstart/touchendは削除して競合を回避）
-  // キャプチャフェーズで処理して、overlayより先に処理されるようにする
+  // clickイベントを追加（キャプチャフェーズで確実に処理）
   try {
+    // キャプチャフェーズで追加（overlayより先に処理）
     menuToggle.addEventListener('click', handleToggleClick, { 
       passive: false, 
-      capture: true 
+      capture: true,
+      once: false
     });
-    debugLog('[Mobile Menu] clickイベントリスナーを追加しました（キャプチャフェーズ）');
+    // 通常フェーズでも追加（念のため）
+    menuToggle.addEventListener('click', handleToggleClick, { 
+      passive: false,
+      capture: false
+    });
+    debugLog('[Mobile Menu] clickイベントリスナーを追加しました（キャプチャフェーズ + 通常フェーズ）');
   } catch (error) {
     debugError('[Mobile Menu] clickイベントリスナーの追加に失敗:', error);
   }
@@ -674,37 +634,32 @@ function initMobileMenu() {
     }
   }, 2000);
 
-  // Close menu when clicking on overlay
-  overlay.addEventListener('click', function(e) {
-    debugLog('[Mobile Menu] Overlay clicked', e.target);
+  // メニュー外をクリックしたら閉じる
+  document.addEventListener('click', function(e) {
+    // メニューが開いている時のみ処理
+    if (!isMenuOpen) return;
+    
     // トグルボタンやメニュー内の要素をクリックした場合は何もしない
     const clickedElement = e.target;
-    const isToggle = clickedElement === menuToggle || 
-                     menuToggle.contains(clickedElement) || 
-                     clickedElement.closest('.header__menu-toggle') ||
-                     clickedElement.closest('button.header__menu-toggle');
-    const isNav = clickedElement === nav || 
-                  nav.contains(clickedElement) || 
-                  clickedElement.closest('.header__nav');
     
-    if (isToggle) {
-      debugLog('[Mobile Menu] Click was on toggle, ignoring overlay click');
-      e.stopPropagation();
-      e.preventDefault();
-      return false;
-    }
-    
-    if (isNav) {
-      debugLog('[Mobile Menu] Click was on menu, ignoring overlay click');
+    // トグルボタンまたはその子要素をクリックした場合は無視
+    if (clickedElement === menuToggle || 
+        menuToggle.contains(clickedElement) || 
+        clickedElement.closest('.header__menu-toggle') ||
+        clickedElement.closest('button.header__menu-toggle')) {
       return;
     }
     
-    // オーバーレイ自体をクリックした場合のみメニューを閉じる
-    if (clickedElement === overlay) {
-      e.stopPropagation();
-      closeMenu();
+    // メニュー内の要素をクリックした場合は無視
+    if (clickedElement === nav || 
+        nav.contains(clickedElement) || 
+        clickedElement.closest('.header__nav')) {
+      return;
     }
-  });
+    
+    // メニュー外をクリックした場合はメニューを閉じる
+    closeMenu();
+  }, { passive: false });
 
   // Close menu when clicking on a link
   // モバイルメニュー内のすべてのリンクを取得
@@ -715,23 +670,27 @@ function initMobileMenu() {
       debugLog('[Mobile Menu] Nav link clicked:', index, link.href);
       const href = link.getAttribute('href');
       
-      // オーバーレイのイベントが干渉しないように、イベントの伝播を止める
+      // イベントの伝播を止めて、overlayのイベントが干渉しないようにする
       e.stopPropagation();
+      e.stopImmediatePropagation();
       
-      // リンクの遷移を確実にするため、デフォルトの動作を妨げない
-      // preventDefault()は呼ばない
-      
+      // リンクの遷移を確実にする
       if (href && href.startsWith('#')) {
-        // アンカーリンクの場合はスムーススクロール後にメニューを閉じる
+        // アンカーリンクの場合はスムーススクロール
+        e.preventDefault();
+        const targetElement = document.querySelector(href);
+        if (targetElement) {
+          targetElement.scrollIntoView({ behavior: 'smooth' });
+        }
         setTimeout(function() {
           closeMenu();
         }, 300);
       } else if (href && href !== '#' && href !== '') {
-        // 通常のリンクの場合は即座にメニューを閉じる
-        // リンク遷移はデフォルトの動作で実行される
+        // 通常のリンクの場合は遷移
         closeMenu();
+        // デフォルトの動作を実行（遷移）
       }
-    }, true); // キャプチャフェーズでイベントを捕捉（オーバーレイより先に処理）
+    }, { capture: true, passive: false }); // キャプチャフェーズでイベントを捕捉（オーバーレイより先に処理）
   });
 
   // Close menu on window resize (if resizing to desktop)
