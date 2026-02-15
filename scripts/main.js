@@ -1,5 +1,5 @@
 /**
- * 鳥山工務店 - Main JavaScript
+ * 山田工務店 - Main JavaScript
  * Handles animations, slider, parallax, and interactions
  */
 
