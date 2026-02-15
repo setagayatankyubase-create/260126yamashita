@@ -316,11 +316,12 @@ function initMobileMenu() {
     });
   }
 
-  // Add click event to toggle button
-  menuToggle.addEventListener('click', function(e) {
+  // Add click event to toggle button - 複数の方法で確実に動作させる
+  function handleToggleClick(e) {
     console.log('[Mobile Menu] Toggle button clicked', {
       isMenuOpen: isMenuOpen,
-      event: e
+      event: e,
+      target: e.target
     });
     e.preventDefault();
     e.stopPropagation();
@@ -330,6 +331,21 @@ function initMobileMenu() {
     } else {
       openMenu();
     }
+  }
+  
+  // 複数のイベントタイプで確実に動作させる
+  menuToggle.addEventListener('click', handleToggleClick, { passive: false });
+  menuToggle.addEventListener('touchend', function(e) {
+    e.preventDefault();
+    handleToggleClick(e);
+  }, { passive: false });
+  
+  // デバッグ: ボタンがクリック可能か確認
+  console.log('[Mobile Menu] Toggle button setup:', {
+    display: window.getComputedStyle(menuToggle).display,
+    visibility: window.getComputedStyle(menuToggle).visibility,
+    pointerEvents: window.getComputedStyle(menuToggle).pointerEvents,
+    zIndex: window.getComputedStyle(menuToggle).zIndex
   });
 
   // Close menu when clicking on overlay
