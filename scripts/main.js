@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
   initFadeInObserver();
   initParallax();
   initEventBanner();
+  initMobileMenu();
 });
 
 /**
@@ -209,14 +210,60 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 });
 
 /**
- * Mobile menu toggle (if needed)
+ * Mobile menu toggle
  */
-const menuToggle = document.querySelector('.header__menu-toggle');
-const nav = document.querySelector('.header__nav');
+function initMobileMenu() {
+  const menuToggle = document.querySelector('.header__menu-toggle');
+  const nav = document.querySelector('.header__nav');
+  const body = document.body;
 
-if (menuToggle && nav) {
-  menuToggle.addEventListener('click', () => {
-    nav.classList.toggle('active');
-    menuToggle.classList.toggle('active');
-  });
+  if (menuToggle && nav) {
+    // Create overlay element
+    const overlay = document.createElement('div');
+    overlay.className = 'mobile-menu-overlay';
+    body.appendChild(overlay);
+
+    function openMenu() {
+      nav.classList.add('active');
+      menuToggle.classList.add('active');
+      overlay.classList.add('active');
+      body.style.overflow = 'hidden';
+    }
+
+    function closeMenu() {
+      nav.classList.remove('active');
+      menuToggle.classList.remove('active');
+      overlay.classList.remove('active');
+      body.style.overflow = '';
+    }
+
+    menuToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (nav.classList.contains('active')) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+
+    // Close menu when clicking on overlay
+    overlay.addEventListener('click', () => {
+      closeMenu();
+    });
+
+    // Close menu when clicking on a link
+    const navLinks = nav.querySelectorAll('.header__nav-link');
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        closeMenu();
+      });
+    });
+
+    // Close menu on window resize (if resizing to desktop)
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 1024) {
+        closeMenu();
+      }
+    });
+  }
 }
